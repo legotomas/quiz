@@ -1,24 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import Questions from "./Questions/Questions";
 
 function App() {
+  const [question, setQuestion] = useState(0);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [value, setValue] = useState<string>('');
+  const Question = Questions[question];
+  const onNext = () => {
+      setAnswers([...answers, value]);
+      setQuestion(question+1);
+  };
+    const onSave = () => {
+        setAnswers([...answers, value]);
+        alert("Answers are:"+answers.map((a,i) => i+1+": "+a).join(", "));
+    };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Question {question+1}</h1>
+      <Question answered={value => setValue(value)}/>
+      {question < (Questions.length-1)  && <button onClick={onNext}>NEXT</button>}
+      {question === (Questions.length-1)  && <button onClick={onSave}>SAVE</button>}
+      <h2>Value: {value}</h2>
+      <h2>Answers:</h2>
+      {answers.map((answer, i) => <div>Answer{i}: {answer}</div>)}
     </div>
   );
 }
